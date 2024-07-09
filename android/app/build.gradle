@@ -45,6 +45,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+
+        minSdkVersion 23
+        targetSdkVersion 28
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -54,6 +58,10 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+}
+
+dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 flutter {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:trust_location/trust_location.dart';
-import 'bottom_navigation_bar.dart';
+import '../bottom_navigation_bar.dart';
 import 'login.dart';
 
 class Home extends StatefulWidget {

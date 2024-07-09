@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
-import 'bottom_navigation_bar.dart';
+import '../bottom_navigation_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
