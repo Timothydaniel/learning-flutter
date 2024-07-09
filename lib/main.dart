@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pages/login.dart';
 import 'pages/home.dart';
+import 'pages/crud.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +13,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/login',
+      initialRoute: '/crud',
       routes: {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const Home(),
+        '/crud': (context) => const CrudApp(),
       },
     );
   }

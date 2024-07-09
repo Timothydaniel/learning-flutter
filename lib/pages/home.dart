@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:trust_location/trust_location.dart';
 import '../bottom_navigation_bar.dart';
 import 'login.dart';
+import 'crud.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -34,6 +35,8 @@ class _HomeState extends State<Home> {
     }
   }
 
+
+
   void _getLocation() async {
     try {
       TrustLocation.onChange.listen((values) {
@@ -43,6 +46,7 @@ class _HomeState extends State<Home> {
           isMock = values.isMockLocation;
         });
         _geoCode();
+        TrustLocation.stop();
       });
     } catch (e) {
       print('error');
@@ -70,6 +74,24 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'GPS',
+          style: TextStyle(
+              color: Colors.white, fontFamily: 'Roboto', fontSize: 20),
+        ),
+        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.blueAccent, Colors.lightBlueAccent],
+            ),
+          ),
+        ),
+      ),
       body: Center(
         child: Text(
           latitude != null && latitude!.isNotEmpty
@@ -90,6 +112,11 @@ class _HomeState extends State<Home> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const Home()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CrudApp()),
             );
           }
         },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 import '../bottom_navigation_bar.dart';
+import 'crud.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,28 +30,52 @@ class _LoginPageState extends State<LoginPage> {
     debugPrint('Login berhasil');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Home()), // Navigate to Home page on successful login
+      MaterialPageRoute(
+        builder: (context) => const Home(),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // Add this line to prevent the keyboard from causing overflow
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: Colors.grey[100],
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Poppins',
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.lightBlueAccent],
+            ),
+          ),
+        ),
       ),
       body: Container(
-        color: Colors.grey[100],
+        color: Colors.white,
         padding: const EdgeInsets.all(24),
         child: Center(
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min, // Add this line to the Column widget to prevent overflow
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Silakan login untuk',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
                 _buildTextFormField(
                   labelText: 'Username',
                   onSaved: (value) => _username = value!,
@@ -90,6 +115,11 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const Home()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CrudApp()),
             );
           }
         },
