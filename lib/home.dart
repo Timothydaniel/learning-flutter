@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:trust_location/trust_location.dart';
 
@@ -12,28 +13,27 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String? latitude;
   String? longitude;
-  String? address;
   bool? isMock;
 
   @override
   void initState() {
     super.initState();
-    requestPermission();
-    getLocation();
+    _requestPermission();
+    _getLocation();
   }
 
-  void requestPermission() async {
+  void _requestPermission() async {
     final permission = await Permission.location.request();
 
     if (permission == PermissionStatus.granted) {
       TrustLocation.start(10);
-      getLocation();
+      _getLocation();
     } else if (permission == PermissionStatus.denied) {
       await Permission.location.request();
     }
   }
 
-  void getLocation() async {
+  void _getLocation() async {
     try {
       TrustLocation.onChange.listen((values) {
         setState(() {
@@ -41,20 +41,41 @@ class _HomeState extends State<Home> {
           longitude = values.longitude.toString();
           isMock = values.isMockLocation;
         });
+        _geoCode();
       });
     } catch (e) {
       print('error');
     }
   }
 
+  void _geoCode() async {
+    if (latitude != null && longitude != null) {
+      List<Placemark> placemark = await placemarkFromCoordinates(
+          double.parse(latitude!), double.parse(longitude!));
+
+      print(placemark[0].country);
+      print(placemark[0].locality);
+      print(placemark[0].postalCode);
+      print(placemark[0].street);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    TrustLocation.stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: const Center(
-        child: Text('blank'),
+      body: Center(
+        child: Text(
+          latitude != null && latitude!.isNotEmpty
+              ? 'Latitude: $latitude\nLongitude: $longitude\nIs Mock: $isMock'
+              : 'No location data',
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     );
   }
