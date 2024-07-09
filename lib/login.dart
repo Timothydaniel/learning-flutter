@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'home.dart';
+import 'bottom_navigation_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,7 +13,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _username = 'admin';
   String _password = '123';
-  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   void _validateAndLogin() {
     if (_formKey.currentState!.validate()) {
@@ -22,26 +20,23 @@ class _LoginPageState extends State<LoginPage> {
       if (_username == 'admin' && _password == '123') {
         _navigateToHome();
       } else {
-        if (kDebugMode) {
-          print('Login gagal');
-        }
+        debugPrint('Login gagal');
       }
     }
   }
 
   void _navigateToHome() {
-    if (kDebugMode) {
-      print('Login berhasil');
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()), // Navigate to Home page on successful login
-      );
-    }
+    debugPrint('Login berhasil');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Home()), // Navigate to Home page on successful login
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // Add this line to prevent the keyboard from causing overflow
       appBar: AppBar(
         title: const Text('Login'),
         backgroundColor: Colors.grey[100],
@@ -54,33 +49,16 @@ class _LoginPageState extends State<LoginPage> {
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min, // Add this line to the Column widget to prevent overflow
               children: <Widget>[
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your username';
-                    }
-                    return null;
-                  },
+                _buildTextFormField(
+                  labelText: 'Username',
                   onSaved: (value) => _username = value!,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
+                _buildTextFormField(
+                  labelText: 'Password',
                   obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
                   onSaved: (value) => _password = value!,
                 ),
                 const SizedBox(height: 20),
@@ -100,22 +78,43 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        color: Colors.white,
-        buttonBackgroundColor: Colors.white,
-        backgroundColor: Colors.grey[100]!,
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 500),
-        key: _bottomNavigationKey,
-        index: 0,
-        items: const <Widget>[
-          Icon(Icons.add, size: 30),
-          Icon(Icons.list, size: 30),
-          Icon(Icons.compare_arrows, size: 30),
-          Icon(Icons.call_split, size: 30),
-          Icon(Icons.perm_identity, size: 30),
-        ],
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Home()),
+            );
+          }
+        },
       ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String labelText,
+    bool obscureText = false,
+    required FormFieldSetter<String> onSaved,
+  }) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: const OutlineInputBorder(),
+      ),
+      obscureText: obscureText,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your $labelText';
+        }
+        return null;
+      },
+      onSaved: onSaved,
     );
   }
 }

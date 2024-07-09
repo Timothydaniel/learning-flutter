@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:trust_location/trust_location.dart';
+import 'bottom_navigation_bar.dart';
+import 'login.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,7 +21,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _requestPermission();
-    _getLocation();
   }
 
   void _requestPermission() async {
@@ -62,8 +63,8 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    super.dispose();
     TrustLocation.stop();
+    super.dispose();
   }
 
   @override
@@ -74,8 +75,24 @@ class _HomeState extends State<Home> {
           latitude != null && latitude!.isNotEmpty
               ? 'Latitude: $latitude\nLongitude: $longitude\nIs Mock: $isMock'
               : 'No location data',
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20),
         ),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Home()),
+            );
+          }
+        },
       ),
     );
   }
